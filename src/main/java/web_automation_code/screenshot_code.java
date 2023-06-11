@@ -6,9 +6,9 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class screenshot_code {
+public class Screenshot_code {
 
-	public static void main(String[] args) {
+	public void make_screenshot() {
 		// TODO Auto-generated method stub
 		try {
 			// Capture the screen
@@ -21,8 +21,10 @@ public class screenshot_code {
             ImageIO.write(screenCapture, "jpg", screenshotFile);
 
             System.out.println("Screenshot saved successfully.");
-        } catch (AWTException | IOException ex) {
-            ex.printStackTrace();
+        } catch (AWTException ex1) {
+            ex1.printStackTrace();
+        } catch (IOException ex2) {
+            ex2.printStackTrace();
         }
 
 	}

@@ -4,8 +4,13 @@ package web_automation_code;
 
 import org.openqa.selenium.chrome.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
@@ -15,7 +20,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import web_automation_code.ImportFromExcel;
-import web_automation_code.screenhot_code;
+import web_automation_code.Screenshot_code;
+
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.NoSuchElementException;
+
 
 public class WebAutomation {
 	
@@ -51,6 +61,7 @@ public class WebAutomation {
 	String current_year_string = "";
 	
 	ImportFromExcel import_from_excel = new ImportFromExcel();
+	Screenshot_code screenshot_code_obj = new Screenshot_code();
 
 	//import_from_excel.create_lists();
     
@@ -73,9 +84,11 @@ public class WebAutomation {
 	List<Integer> baby_amount_list = import_from_excel.create_int_list(15);
 	
 	size = number_list.size();
+	//System.out.print(size);
 
 		// TODO Auto-generated method stub
-    		for (i = 0; i < size; i++) {
+    for (i = 0; i < size; i++) {
+    	//System.out.print("AKCJA");
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\wojci\\Documents\\KODOWANIE\\chromedriver\\chromedriver.exe");
 		
 		ChromeDriver driver = new ChromeDriver(); 
@@ -84,8 +97,8 @@ public class WebAutomation {
 	        driver.get("https://www.esky.pl/tanie-loty?gclid=EAIaIQobChMIx4jzwvnU_gIVyAqiAx0M9ATbEAAYAiAAEgKxNPD_BwE");
 	        Thread.sleep(5);
 	    }
-	    finally{
-	    	System.out.print("page loading failed");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    
 	    try{
@@ -94,98 +107,105 @@ public class WebAutomation {
 	    	cookie_button.click();
 	    	Thread.sleep(3);
 	    }
-	    finally{
-	    	System.out.print("cookie window not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    WebElement form_box;
+	    WebElement form_box = null;
 	    try{
 	    	WebElement outer_form_box = driver.findElement(By.id("multiQsfFlights"));
 	    	form_box = outer_form_box.findElement(By.tagName("form"));
 	    }
-	    finally{
-	    	System.out.print("form box not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    WebElement form_top;
-	    WebElement main_class;
+	    WebElement form_top = null;
+	    WebElement main_class = null;
 	    try{
 			form_top = form_box.findElement(By.className("top"));
 	    	main_class = form_box.findElement(By.className("main"));
 	    }
-	    finally{
-	    	System.out.print("top & main class not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    Select trip_type_list;
+	    Select trip_type_list = null;
+	    WebElement trip_type_list_bis = null;
 	    try{
 	    	trip_type_list = new Select(form_top.findElement(By.id("serviceClass")));
+	    	trip_type_list_bis = form_top.findElement(By.id("serviceClass"));
 	    }
-	    finally{
-	    	System.out.print("class selector not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    
 	    try{
 	    	trip_type_list.selectByValue(my_class_list.get(i));
 	    	Thread.sleep(5);
 	    }
-	    finally{
-	    	System.out.print("selecting " + (my_class_list.get(i)).toString() + " option from dropdown failed");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    
+	    WebElement new_trip_type_list = null;
 	    try {
-	    	WebElement new_trip_type_list = form_top.findElement(By.className("trip-type-list"));
+	    	new_trip_type_list = form_top.findElement(By.className("trip-type-list"));
 	    }
-	    finally{
-	    	System.out.print("trip_type_list class not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    
 	    try {
-	    	List<WebElement> li_tags = trip_type_list.findElements(By.tagName("li"));
-	    	size_bis = li_tags.size();
-	        for (q = 0; i < size_bis; q++) {
-	            try {
-	            	WebElement demanded_li = li_tags.get(q).findElement(By.id("TripTypeMulticity"));
-	                demanded_li.click();
-	                Thread.sleep(3);
-	            }
-	        	finally{
-	                continue;
-	            }
-	        }
+	    	WebElement demanded_li = new_trip_type_list.findElement(By.id("TripTypeMulticity"));
+	        demanded_li.click();
+	        Thread.sleep(3);
+	        System.out.print("CLICK");
 	    }
-	    finally{
-	    	System.out.print("travel type not selected");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    WebElement tm;
+	    WebElement tm = null;
 	    try {
 	    	tm = main_class.findElement(By.id("tm"));
+	    	Thread.sleep(5);
 	    }
-	    finally{
-	    	System.out.print("tm block not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    
+	    first_departure_location = first_departure_location_list.get(i);
+	    first_arrival_location = first_arrival_location_list.get(i);
+	    second_departure_location = second_departure_location_list.get(i);
+	    final_destination_location = final_destination_location_list.get(i);
+	    		
 	    try {
 	    	WebElement departure_location_0 = tm.findElement(By.id("departureMulticity0"));
+	    	Thread.sleep(5);
 	    	departure_location_0.sendKeys(first_departure_location);
+	    	Thread.sleep(5);
 	    	WebElement arrival_location_0 = tm.findElement(By.id("arrivalMulticity0"));
+	    	Thread.sleep(5);
 	    	arrival_location_0.sendKeys(first_arrival_location);
+	    	Thread.sleep(5);
 	    	WebElement departure_location_1 = tm.findElement(By.id("departureMulticity1"));
+	    	Thread.sleep(5);
 	    	departure_location_1.sendKeys(second_departure_location);
+	    	Thread.sleep(5);
 	    	WebElement arrival_location_1 = tm.findElement(By.id("arrivalMulticity1"));
+	    	Thread.sleep(5);
 	    	arrival_location_1.sendKeys(final_destination_location);
+	    	Thread.sleep(5);
 	    }
-	    finally{
-	    	System.out.print("arrivals and/or departures locations not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-	    List<WebElement> departure_dates;
+	    List<WebElement> departure_dates = null;
 	    try {
 	    	departure_dates = tm.findElements(By.className("trip-dates"));
 	    }
-	    finally{
-	    	System.out.print("trip-dates not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    count = 0;
 	    size_bis = departure_dates.size();
 	    
-	    for (q = 0; i < size_bis; i++) {
+	    for (q = 0; q < size_bis; q++) {
+	    	System.out.print("PEKIN");
 	        try {
 	        	WebElement date_button = departure_dates.get(q).findElement(By.tagName("button"));
 	            date_button.click();
@@ -193,12 +213,12 @@ public class WebAutomation {
 	            check = 1;
 	            count = count + 1;
 	        }
-	        finally{
-	            check = 0;
-	        }
+	        catch (IllegalArgumentException | WebDriverException ex) {
+	            ex.printStackTrace();
+		    }
 
 	        if (check == 1) {
-	        	
+	        	System.out.print("TEHERAN");
 	            check = 0;
 	            if (count < 2) {
 	                searched_month = first_departure_month_list.get(i);
@@ -211,53 +231,52 @@ public class WebAutomation {
 	                searched_day = second_departure_day_list.get(i);
 	            }
 	            count = count + 1;
-	            WebElement date_selection_box;
-	            WebElement date_selection_box_header;
-	            WebElement current_month_and_year_box;
+	            WebElement date_selection_box = null;
+	            WebElement date_selection_box_header = null;
+	            WebElement current_month_and_year_box = null;
 	            while (check == 0) {
 	                try {
 	                	date_selection_box = driver.findElement(By.id("ui-datepicker-div"));
 	                }
-	                finally{
-	                	System.out.print("ui-datepicker-div not found");
-	                }
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
 	                try {
 	                	date_selection_box_header = date_selection_box.findElement(By.className("ui-datepicker-header"));
 	                }
-	                finally{
-	                	System.out.print("ui - datepicker - header not found");
-	                }
-	                WebElement move_to_next_month_button;
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
+	                WebElement move_to_next_month_button = null;
 	                try {
 	                	move_to_next_month_button = date_selection_box_header.findElement(By.className("ui-datepicker-next"));
 	                }
-	                finally{
-	                	System.out.print("ui-datepicker-next not found");
-	                }
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
 	                try {
 	                	current_month_and_year_box = date_selection_box_header.findElement(By.className("ui-datepicker-title"));
 	                }
-	                finally {
-	                	System.out.print("ui-datepicker-title not found");
-	                }
-	                WebElement current_month;
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
+	                WebElement current_month = null;
 	                try {
 	                	current_month = current_month_and_year_box.findElement(By.className("ui-datepicker-month"));
 	                    current_month_string = current_month.getAttribute("innerHTML").strip();
 	                }
-	                finally {
-	                	System.out.print("ui-datepicker-month not found");
-	                }
-	                WebElement current_year;
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
+	                WebElement current_year = null;
 	                try {
 	                	current_year = current_month_and_year_box.findElement(By.className("ui-datepicker-year"));
 	                    current_year_string = current_year.getAttribute("innerHTML").strip();
 	                }
-	                finally {
-	                	System.out.print("ui-datepicker-year not found");
-	                }
-
-	                if (current_month_string == searched_month.toString() && current_year_string == searched_year.toString())
+	                catch (IllegalArgumentException | WebDriverException ex) {
+	                    ex.printStackTrace();
+	        	    }
+	                if (current_month_string.toString() == searched_month.toString() &&  String.valueOf(current_year_string) == Integer.toString(searched_year))
 	                {
 	                    check = 1;
 	                    switch (searched_month) {
@@ -287,20 +306,20 @@ public class WebAutomation {
 	                        case "Grudzień":
 	                            int_searched_month = 12;
 	                    }
-	                    WebElement date_selection_box_table;
+	                    WebElement date_selection_box_table = null;
 	                    try {
 	                    	date_selection_box_table = date_selection_box.findElement(By.className("ui-datepicker-calendar"));
 	                    }
-	                    finally {
-	                    	System.out.print("ui-datepicker-calendar not found");
-	                    }
-	                    WebElement date_selection_box_table_body;
+	                    catch (IllegalArgumentException | WebDriverException ex) {
+	                        ex.printStackTrace();
+	            	    }
+	                    WebElement date_selection_box_table_body = null;
 	                    try {
-	                    	date_selection_box_table_body = date_selection_box_table.findElement(By.tagName("tbody");
+	                    	date_selection_box_table_body = date_selection_box_table.findElement(By.tagName("tbody"));
 	                    }
-	                    finally {
-	                        System.out.print("tbody not found");
-	                    }
+	                    catch (IllegalArgumentException | WebDriverException ex) {
+	                        ex.printStackTrace();
+	            	    }
 	                    try {
 	                        // data1 = date_selection_box_table_body.findElement(By.XPATH, f"//td[@data-month="" + {str(int_searched_month)} + ""]/a[text()="" + {str(searched_day)} + ""]")
 	                    	List<WebElement> days_list = date_selection_box_table_body.findElements(By.className("ui-state-default"));
@@ -315,55 +334,60 @@ public class WebAutomation {
 	                            }
 	                    	}
 	                    }
-	                    finally {
-	                        System.out.print("click failed");
-	                    }
+	                    catch (IllegalArgumentException | WebDriverException ex) {
+	                        ex.printStackTrace();
+	            	    }
 	                    Thread.sleep(3);
 	                }
 	                else {
 	                    // pickers = date_selection_box_header.findElements(By.className("ui-datepicker-prev")
-	                    System.out.print("current month is:" + current_month.toString() + " my month is:" + searched_month.toString());
-	                    System.out.print("current year is:" + String.valueOf(current_year) + " my year is:" + String.valueOf(searched_year));
+	                    System.out.print("current month is:" + current_month_string.toString() + " my month is:" + searched_month.toString());
+	                    System.out.print("current year is:" + String.valueOf(current_year_string) + " my year is:" + String.valueOf(searched_year));
 	                    
 	                    try {
 	                        move_to_next_month_button.click();
 	                    }
-	                    finally {
-	                        System.out.print("arrow button not found");
-	                    }
+	                    catch (IllegalArgumentException | WebDriverException ex) {
+	                        ex.printStackTrace();
+	            	    }
 	                    Thread.sleep(3);
 	                }
 	            }
 	        }
 	        else {
-	            System.out.print("33");
+	            System.out.print("next step");
 	        }
 	    }
 	    // passenger block
-	    WebElement passenger_number_div;
-    	WebElement passenger_number_selctor;
+	    WebElement passenger_number_div = null;
+    	WebElement passenger_number_selctor = null;
 	    try {
 	    	passenger_number_div = form_box.findElement(By.className("right-data"));
 	    	passenger_number_selctor = passenger_number_div.findElement(By.className("trip-paxes"));
 	    	passenger_number_selctor.click();
 	    	Thread.sleep(3);
 	    }
-	    finally {
-	    	System.out.print("passenger number div not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
-
-	    WebElement passenger_types_dropdown_list = driver.findElement(By.className("pax-i"));
+	    WebElement passenger_types_dropdown_list = null;
+	    try {
+	    	passenger_types_dropdown_list = driver.findElement(By.className("pax-counter"));
+	    }
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
+	    }
 	    // Adults numbers
-	    WebElement adult_number;
+	    WebElement adult_number = null;
 	    try {
 	    	adult_number = passenger_types_dropdown_list.findElement(By.className("adult"));
 	    }
-	    finally {
-	    	System.out.print("adult class not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    check = 0;
-	    WebElement current_number;
-	    WebElement current_number_increment;
+	    WebElement current_number = null;
+	    WebElement current_number_increment = null;
 	    String current_number_string = "";
 	    int current_number_int = 0;
 	    while (check == 0) {
@@ -371,28 +395,28 @@ public class WebAutomation {
 	            current_number = adult_number.findElement(By.className("pax-number"));
 	            current_number_string = current_number.getAttribute("innerHTML").strip();
 	        }
-	        finally {
-	        	System.out.print("adult pax not found");
-	        }
+	        catch (IllegalArgumentException | WebDriverException ex) {
+	            ex.printStackTrace();
+		    }
 	        try{
 	            current_number_int = Integer.parseInt(current_number_string);
 	        }
 	        catch (NumberFormatException ex){
-	            ex.System.out.printStackTrace();
+	            ex.printStackTrace();
 	        }
 	        if (current_number_int < adults_amount_list.get(i)) {
 	            try {
-	                current_number_increment = adult_number.findElement(By.className("plus"))
+	                current_number_increment = adult_number.findElement(By.className("plus"));
 	            }
-	            finally {
-	            	System.out.print("increment not found");
-	            }
+	            catch (IllegalArgumentException | WebDriverException ex) {
+	                ex.printStackTrace();
+	    	    }
 	            try {
-	                current_number_increment.click()
+	                current_number_increment.click();
 	            }
-	            finally {
-	            	System.out.print("increment not clicked");
-	            }
+	            catch (IllegalArgumentException | WebDriverException ex) {
+	                ex.printStackTrace();
+	    	    }
 	            Thread.sleep(3);
 	        }
 	        else {
@@ -400,7 +424,7 @@ public class WebAutomation {
 	        }
 	    }
 	    // Youth numbers
-	    WebElement youth_number;
+	    WebElement youth_number = null;
 	    youth_number = passenger_types_dropdown_list.findElement(By.className("youth"));
 	    check = 0;
 	    while (check == 0)
@@ -411,7 +435,7 @@ public class WebAutomation {
 	            current_number_int = Integer.parseInt(current_number_string);
 	        }
 	        catch (NumberFormatException ex){
-	            ex.System.out.printStackTrace();
+	            ex.printStackTrace();
 	        }
 	        if (current_number_int < youth_amount_list.get(i))
 	        {
@@ -425,7 +449,7 @@ public class WebAutomation {
 	        }
 	     }
 	    // Child numbers
-	    WebElement child_number;
+	    WebElement child_number = null;
 	    check = 0;
 	    try {
 	        child_number = passenger_types_dropdown_list.findElement(By.className("child"));
@@ -438,7 +462,7 @@ public class WebAutomation {
 		            current_number_int = Integer.parseInt(current_number_string);
 		        }
 		        catch (NumberFormatException ex){
-		            ex.System.out.printStackTrace();
+		            ex.printStackTrace();
 		        }
 	            if (current_number_int < child_amount_list.get(i))
 	            {
@@ -451,11 +475,11 @@ public class WebAutomation {
 	            }
 	        }
 	    }
-	    finally {
-	        System.out.print("child passenger i not found")
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    // Babies numbers
-	    WebElement baby_number;
+	    WebElement baby_number = null;
 	    check = 0;
 	    try {
 	        baby_number = passenger_types_dropdown_list.findElement(By.className("infant"));
@@ -468,7 +492,7 @@ public class WebAutomation {
 		            current_number_int = Integer.parseInt(current_number_string);
 		        }
 		        catch (NumberFormatException ex){
-		            ex.System.out.printStackTrace();
+		            ex.printStackTrace();
 		        }
 	            if (current_number_int < baby_amount_list.get(i))
 	            {
@@ -482,40 +506,40 @@ public class WebAutomation {
 	            }
 	        }
 	    }
-	    finally {
-	        System.out.print("baby passenger i not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    // click form
-	    WebElement button_gotowe;
-	    WebElement search_button;
-	    WebElement button_name;
+	    WebElement button_gotowe = null;
+	    WebElement search_button = null;
+	    WebElement button_name = null;
 	    String button_name_string = "";
 	    try {
 	        button_gotowe = passenger_types_dropdown_list.findElement(By.className("close-pax-i"));
 	    }
-	    finally {
-	        System.out.print("close-pax-i not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    try {
 	        button_gotowe.click();
 	    }
-	    finally {
-	        System.out.print("failed to click Gotowe button");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    // wyszukujemy lot
 	    try {
 	        //search_button_outer_box = form_box.findElement(By.className"close-pax-i")
 	        search_button = passenger_number_div.findElement(By.className("transaction"));
 	    }
-	    finally {
-	        System.out.print("transaction not found");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 	    try {
 	        button_name = search_button.findElement(By.className("text"));
 	        button_name_string = button_name.getAttribute("innerHTML").strip();
 	    }
-	    finally {
-	        System.out.print("no button name found in form");
+	    catch (IllegalArgumentException | WebDriverException ex) {
+            ex.printStackTrace();
 	    }
 
 	    if (button_name_string == "Szukaj lotu")
@@ -524,9 +548,9 @@ public class WebAutomation {
 	            search_button.click();
 	            Thread.sleep(3);
 	        }
-	        finally {
-	            System.out.print("failed to click button");
-	        }
+	        catch (IllegalArgumentException | WebDriverException ex) {
+	            ex.printStackTrace();
+		    }
 	    }
 	    else
 	    {
@@ -537,14 +561,25 @@ public class WebAutomation {
 	    		
 	    // Wykonujemy System.out.print screen
 	    try {
-	    		TakesScreenshot scrShot =((TakesScreenshot)webdriver);
-	    		File SrcFile=scrShot.getScreenshotAs(OutputType.FILE);
-	    	    driver.save_screenshot("screenshot"+ String.valueOf(i) + ".jpg");
-	    }
+            // Capture the screen
+            Robot robot = new Robot();
+            Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+            BufferedImage screenCapture = robot.createScreenCapture(screenRect);
+
+            // Save the screenshot as an image file
+            File screenshotFile = new File("screenshot.jpg");
+            ImageIO.write(screenCapture, "jpg", screenshotFile);
+
+            System.out.println("Screenshot saved successfully.");
+        } catch (AWTException | IOException ex) {
+            ex.printStackTrace();
+        }
 	    finally {
 	    	    System.out.print("failed to save a screenshot");
 	    	    driver.quit();
 	    }
+	    System.out.print("AKCJA");
 	}
-
+    System.out.print("DONE");
+  }
 }
