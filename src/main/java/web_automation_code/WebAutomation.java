@@ -32,10 +32,8 @@ public class WebAutomation {
 	public static void main(String[] args) throws InterruptedException {
 		
 
-	int i = 0;
-	int q = 0;
 	int size = 0;
-	int size_bis = 0;
+	int departure_dates_size = 0;
 	int check = 0;
 	int count = 0;
 	int searched_year = 0;
@@ -87,7 +85,7 @@ public class WebAutomation {
 	//System.out.print(size);
 
 		// TODO Auto-generated method stub
-    for (i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
     	//System.out.print("AKCJA");
 		System.setProperty("webdriver.chrome.driver", "C:\\Users\\wojci\\Documents\\KODOWANIE\\chromedriver\\chromedriver.exe");
 		
@@ -202,12 +200,14 @@ public class WebAutomation {
             ex.printStackTrace();
 	    }
 	    count = 0;
-	    size_bis = departure_dates.size();
-	    
-	    for (q = 0; q < size_bis; q++) {
-	    	System.out.print("PEKIN");
+	    departure_dates_size = departure_dates.size();
+	    //System.out.print(departure_dates_size);
+    	//System.out.print("\n");
+    	WebElement date_button = null;
+    	
+	    for (int q = 0; q < departure_dates_size; q++) {
 	        try {
-	        	WebElement date_button = departure_dates.get(q).findElement(By.tagName("button"));
+	        	date_button = departure_dates.get(q).findElement(By.tagName("button"));
 	            date_button.click();
 	            Thread.sleep(3);
 	            check = 1;
@@ -216,19 +216,23 @@ public class WebAutomation {
 	        catch (IllegalArgumentException | WebDriverException ex) {
 	            ex.printStackTrace();
 		    }
-
+	        String searched_month_string = "";
+	        String searched_day_string = "";
 	        if (check == 1) {
-	        	System.out.print("TEHERAN");
 	            check = 0;
 	            if (count < 2) {
 	                searched_month = first_departure_month_list.get(i);
+	                searched_month_string = searched_month.toString();
 	                searched_year = first_departure_years_list.get(i);
 	                searched_day = first_departure_day_list.get(i);
+	                searched_day_string = String.valueOf(searched_day);
 	            }
 	            else {
 	            	searched_month = second_departure_month_list.get(i);
+	            	searched_month_string = searched_month.toString();
 	                searched_year = second_departure_years_list.get(i);
 	                searched_day = second_departure_day_list.get(i);
+	                searched_day_string = String.valueOf(searched_day);
 	            }
 	            count = count + 1;
 	            WebElement date_selection_box = null;
@@ -261,6 +265,7 @@ public class WebAutomation {
 	                    ex.printStackTrace();
 	        	    }
 	                WebElement current_month = null;
+	                Thread.sleep(3);
 	                try {
 	                	current_month = current_month_and_year_box.findElement(By.className("ui-datepicker-month"));
 	                    current_month_string = current_month.getAttribute("innerHTML").strip();
@@ -276,75 +281,96 @@ public class WebAutomation {
 	                catch (IllegalArgumentException | WebDriverException ex) {
 	                    ex.printStackTrace();
 	        	    }
-	                if (current_month_string.toString() == searched_month.toString() &&  String.valueOf(current_year_string) == Integer.toString(searched_year))
+	                if (current_month_string.equals(searched_month_string))
+	                	{
+	                	if(String.valueOf(current_year_string).equals(String.valueOf(searched_year)))
 	                {
-	                    check = 1;
-	                    switch (searched_month) {
-	                        case "Styczeń":
-	                            int_searched_month = 1;
-	                            break;
-	                        case "Luty":
-	                            int_searched_month = 2;
-	                        case "Marzec":
-	                            int_searched_month = 3;
-	                        case "Kwiecień":
-	                            int_searched_month = 4;
-	                        case "Maj":
-	                            int_searched_month = 5;
-	                        case "Czerwiec":
-	                            int_searched_month = 6;
-	                        case "Lipiec":
-	                            int_searched_month = 7;
-	                        case "Sierpień":
-	                            int_searched_month = 8;
-	                        case "Wrzesień":
-	                            int_searched_month = 9;
-	                        case "Październik":
-	                            int_searched_month = 10;
-	                        case "Listopad":
-	                            int_searched_month = 11;
-	                        case "Grudzień":
-	                            int_searched_month = 12;
-	                    }
-	                    WebElement date_selection_box_table = null;
-	                    try {
-	                    	date_selection_box_table = date_selection_box.findElement(By.className("ui-datepicker-calendar"));
-	                    }
-	                    catch (IllegalArgumentException | WebDriverException ex) {
-	                        ex.printStackTrace();
-	            	    }
-	                    WebElement date_selection_box_table_body = null;
-	                    try {
-	                    	date_selection_box_table_body = date_selection_box_table.findElement(By.tagName("tbody"));
-	                    }
-	                    catch (IllegalArgumentException | WebDriverException ex) {
-	                        ex.printStackTrace();
-	            	    }
-	                    try {
-	                        // data1 = date_selection_box_table_body.findElement(By.XPATH, f"//td[@data-month="" + {str(int_searched_month)} + ""]/a[text()="" + {str(searched_day)} + ""]")
-	                    	List<WebElement> days_list = date_selection_box_table_body.findElements(By.className("ui-state-default"));
-	                    	size_bis = days_list.size();
-	                    	for (q = 0; q < size_bis; q++) {
-	                            String day_number = days_list.get(q).getAttribute("innerHTML").strip();
-	                            if (day_number.toString() == String.valueOf(searched_day))
-	                            {
-	                            	days_list.get(q).click();
-	                                Thread.sleep(3);
-	                                break;
-	                            }
-	                    	}
-	                    }
-	                    catch (IllegalArgumentException | WebDriverException ex) {
-	                        ex.printStackTrace();
-	            	    }
-	                    Thread.sleep(3);
-	                }
+	                	//System.out.print(int_searched_month);
+	                	//System.out.print("\n");
+		                check = 1;
+		                switch (searched_month) {
+		                	case "Styczeń":
+		                		int_searched_month = 1;
+		                        break;
+		                    case "Luty":
+		                        int_searched_month = 2;
+		                        break;
+		                    case "Marzec":
+		                        int_searched_month = 3;
+		                        break;
+		                    case "Kwiecień":
+		                        int_searched_month = 4;
+		                        break;
+		                    case "Maj":
+		                        int_searched_month = 5;
+		                        break;
+		                    case "Czerwiec":
+		                        int_searched_month = 6;
+		                        break;
+		                    case "Lipiec":
+		                        int_searched_month = 7;
+		                        break;
+		                    case "Sierpień":
+		                        int_searched_month = 8;
+		                        break;
+		                    case "Wrzesień":
+		                        int_searched_month = 9;
+		                        break;
+		                    case "Październik":
+		                        int_searched_month = 10;
+		                        break;
+		                    case "Listopad":
+		                        int_searched_month = 11;
+		                        break;
+		                    case "Grudzień":
+		                        int_searched_month = 12;
+		                        break;
+		                }
+		                WebElement date_selection_box_table = null;
+		                try {
+		                	date_selection_box_table = date_selection_box.findElement(By.className("ui-datepicker-calendar"));
+		                }
+		                catch (IllegalArgumentException | WebDriverException ex) {
+		                	ex.printStackTrace();
+		            	}
+		                WebElement date_selection_box_table_body = null;
+		                try {
+		                	date_selection_box_table_body = date_selection_box_table.findElement(By.tagName("tbody"));
+		                }
+		                catch (IllegalArgumentException | WebDriverException ex) {
+		                	ex.printStackTrace();
+		            	}
+		                try {
+		                	// data1 = date_selection_box_table_body.findElement(By.XPATH, f"//td[@data-month="" + {str(int_searched_month)} + ""]/a[text()="" + {str(searched_day)} + ""]")
+		                	List<WebElement> days_list = date_selection_box_table_body.findElements(By.className("ui-state-default"));
+		                    int size_days_list = days_list.size();
+		                    for (int p = 0; p < size_days_list; p++) {
+		                    	String day_number = days_list.get(p).getAttribute("innerHTML").strip();
+		                        if ((day_number.toString()).equals(searched_day_string))
+		                        {
+		                        	days_list.get(p).click();
+		                            Thread.sleep(3);
+		                            break;
+		                        }
+		                    }
+		                }
+		                catch (IllegalArgumentException | WebDriverException ex) {
+		                	ex.printStackTrace();
+		            	}
+		                Thread.sleep(3);
+	            	}
+	                else {
+	                    System.out.print("current year is:" + String.valueOf(current_year_string) + " my year is:" + String.valueOf(searched_year));
+	                    System.out.print("\n");
+	                	}
+	                	}
 	                else {
 	                    // pickers = date_selection_box_header.findElements(By.className("ui-datepicker-prev")
-	                    System.out.print("current month is:" + current_month_string.toString() + " my month is:" + searched_month.toString());
-	                    System.out.print("current year is:" + String.valueOf(current_year_string) + " my year is:" + String.valueOf(searched_year));
+	                    System.out.print("current month is:" + current_month_string.toString() + " my month is:" + searched_month_string);
+	                    System.out.print("\n");
 	                    
 	                    try {
+	                    	Thread.sleep(3);
 	                        move_to_next_month_button.click();
 	                    }
 	                    catch (IllegalArgumentException | WebDriverException ex) {
@@ -515,7 +541,7 @@ public class WebAutomation {
 	    WebElement button_name = null;
 	    String button_name_string = "";
 	    try {
-	        button_gotowe = passenger_types_dropdown_list.findElement(By.className("close-pax-i"));
+	        button_gotowe = passenger_types_dropdown_list.findElement(By.className("close-pax-counter"));
 	    }
 	    catch (IllegalArgumentException | WebDriverException ex) {
             ex.printStackTrace();
@@ -578,8 +604,8 @@ public class WebAutomation {
 	    	    System.out.print("failed to save a screenshot");
 	    	    driver.quit();
 	    }
-	    System.out.print("AKCJA");
+	    System.out.print("DONE 1");
 	}
-    System.out.print("DONE");
+    System.out.print("DONE 2");
   }
 }
