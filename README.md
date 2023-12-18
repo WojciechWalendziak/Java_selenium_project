@@ -1,3 +1,3 @@
 # Java_selenium_project
 
-Java selenium project under construction (not completed yet)
+Java version of flight_booking_automation project (which is based on python).
